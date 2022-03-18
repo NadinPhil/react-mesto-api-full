@@ -3,7 +3,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-
+const { cors } = require('cors');
+require('dotenv').config();
 const { userRoutes } = require('./routes/users');
 const { cardRoutes } = require('./routes/cards');
 const {
@@ -20,9 +21,17 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
+app.use(cors());
+
 app.use(express.json());
 
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);

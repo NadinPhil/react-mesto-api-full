@@ -109,7 +109,7 @@ editUserAvatar(userAvatar){
 }
 
 const api = new Api({
-    url: 'https://mesto.nomoreparties.co/v1/cohort-30',
+    url: 'https://mestoBD.nomoredomains.work',
     headers: {
         authorization: '31260589-e34c-433a-a114-9db11ff4554e',
         "content-type": "application/json"
