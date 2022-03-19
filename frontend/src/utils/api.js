@@ -12,57 +12,81 @@ _checkResponse(res) {
 }
 
 //получение списка карточек в виде массива
-getAllCards(){
+getAllCards(token){
 return fetch ( `${this._url}/cards`, {
     method: "GET",
-    headers:  this._headers,
+    //headers:  this._headers,
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
 })
 .then(this._checkResponse)
 }
 
 //получение данных пользователя
-getUserInfo(){
+getUserInfo(token){
     return fetch ( `${this._url}/users/me`, {
         method: "GET",
-        headers:  this._headers,
+        //headers:  this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
     })
     .then(this._checkResponse)
     }
 
 //лайк карточки
-setCardLike(cardId){
-    return fetch ( `${this._url}/cards/likes/${cardId}`, {
+setCardLike(cardId, token){
+    return fetch ( `${this._url}/cards/${cardId}/likes`, {
         method: "PUT",
-        headers:  this._headers,
+        //headers:  this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
     })
     .then(this._checkResponse)
      
     }
 
 //удаление лайка карточки 
-removeCardLike(cardId){
-    return fetch ( `${this._url}/cards/likes/${cardId}`, {
+removeCardLike(cardId, token){
+    return fetch ( `${this._url}/cards/${cardId}/likes`, {
         method: "DELETE",
-        headers:  this._headers,
+        //headers:  this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
     })
     .then(this._checkResponse)
      
     }
    
-changeLikeCardStatus(isLiked, cardId){
+changeLikeCardStatus(isLiked, cardId, token){
     return fetch ( `${this._url}/cards/likes/${cardId}`, {
         method: `${isLiked ? "DELETE" : "PUT"}`,
-        headers:  this._headers,
+        //headers:  this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
     })
     .then(this._checkResponse)
      
     }   
     
 //добавление карточки
-addCard(data){
+addCard(data, token){
     return fetch( `${this._url}/cards`, {
         method: "POST",
-        headers:  this._headers,
+       // headers:  this._headers,
+       headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
         body: JSON.stringify({
             name: data.name,
             link: data.link
@@ -73,10 +97,14 @@ addCard(data){
     }
 
 //редактирования профиля
-editUserInfo(data){
+editUserInfo(data, token){
     return fetch( `${this._url}/users/me`, {
         method: 'PATCH',
-        headers:  this._headers,
+        //headers:  this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
         body: JSON.stringify({
             name: data.name,
             about: data.about
@@ -86,19 +114,27 @@ editUserInfo(data){
     }
 
 //удаление карточки 
-removeCard(cardId){
+removeCard(cardId, token){
     return fetch ( `${this._url}/cards/${cardId}`, {
         method: "DELETE",
-        headers:  this._headers,
+        //headers:  this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
     })
     .then(this._checkResponse)
     }
 
 //изменение аватара 
-editUserAvatar(userAvatar){
+editUserAvatar(userAvatar, token){
     return fetch( `${this._url}/users/me/avatar`, {
         method: 'PATCH',
-        headers: this._headers,
+        //headers: this._headers,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
         body: JSON.stringify({
             avatar: userAvatar.avatar
         })
@@ -109,9 +145,9 @@ editUserAvatar(userAvatar){
 }
 
 const api = new Api({
-    url: 'https://mestoBD.nomoredomains.work',
+    url: 'http://localhost:3001',
     headers: {
-        authorization: '31260589-e34c-433a-a114-9db11ff4554e',
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
         "content-type": "application/json"
       }
 });

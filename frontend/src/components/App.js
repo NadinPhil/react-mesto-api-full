@@ -30,6 +30,7 @@ function App() {
   const location = useLocation();
   const [infoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
   const [infoTooltip, setInfoTooltip] = React.useState(false);
+  const jwt = localStorage.getItem('jwt');
 
   useEffect(() => {
     handleTokenCheck('/');
@@ -37,7 +38,7 @@ function App() {
 
   // проверяем токен пользователя
   function handleTokenCheck(path) {
-    if (!loggedIn && localStorage.getItem("jwt")) {
+    if (!loggedIn && localStorage.getItem('jwt')) {
       const jwt = localStorage.getItem('jwt');
       auth.checkToken(jwt)
       .then((res) => {
@@ -111,7 +112,7 @@ function App() {
   // РАБОТА С КАРТОЧКАМИ
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.changeLikeCardStatus(isLiked, card._id)
+    api.changeLikeCardStatus(isLiked, card._id, jwt)
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
       })
@@ -119,7 +120,7 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    api.removeCard(card._id)
+    api.removeCard(card._id, jwt)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
       })
@@ -145,7 +146,7 @@ function App() {
     setSelectedCard({ name: '', link: '' })
   }
   function handleUpdateUser(data) {
-    api.editUserInfo(data)
+    api.editUserInfo(data, jwt)
       .then((dataUser) => {
         setCurrentUser(dataUser)
         closeAllPopups()
@@ -154,7 +155,7 @@ function App() {
   }
 
   function handleUpdateAvatar(data) {
-    api.editUserAvatar(data)
+    api.editUserAvatar(data, jwt)
       .then((dataUser) => {
         setCurrentUser(dataUser)
         closeAllPopups()
@@ -163,7 +164,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(data) {
-    api.addCard(data)
+    api.addCard(data, jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups()
@@ -173,9 +174,10 @@ function App() {
   
   React.useEffect(() => { 
     if (loggedIn) {
+    const jwt = localStorage.getItem('jwt');
     Promise.all([ //в Promise.all передаем массив промисов которые нужно выполнить
-     api.getUserInfo(),
-     api.getAllCards()
+     api.getUserInfo(jwt),
+     api.getAllCards(jwt)
  ])
     .then(([user, cards])=>{ //попадаем сюда, когда оба промиса будут выполнены
        setCurrentUser(user)// 
