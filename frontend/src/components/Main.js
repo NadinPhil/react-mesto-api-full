@@ -5,7 +5,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main(props) {
 
-  const currentUser = React.useContext(CurrentUserContext);
+  const  currentUser  = React.useContext(CurrentUserContext);
 
   return (
     <main className="content">
@@ -16,7 +16,7 @@ function Main(props) {
         </div>
         <div className="profile__info">
           <div className="profile__flex">
-            <h1 className="profile__title">{currentUser.name}</h1>
+            <h1 className="profile__title">{ currentUser.name}</h1>
             <p className="profile__subtitle">{currentUser.about}</p>
           </div>
           <button className="profile__edit" type="button" onClick={props.onEditProfile}></button>
@@ -25,6 +25,7 @@ function Main(props) {
       </section>
       <section className="elements">
         <ul className="card-list">
+          
           {props.cards.map(card => {
             return (
               <Card

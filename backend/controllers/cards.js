@@ -37,7 +37,13 @@ exports.createCard = (req, res, next) => {
   const ownerId = req.user._id;
   card.create({ name, link, owner: ownerId })
     .then((cards) => {
-      res.send({ data: cards });
+      res.send({
+        likes: cards.likes,
+        link: cards.link,
+        name: cards.name,
+        owner: cards.owner,
+        _id: cards._id,
+      });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -56,7 +62,13 @@ exports.putCardLike = (req, res, next) => {
   )
     .then((cards) => {
       if (cards) {
-        res.send({ data: cards });
+        res.send({
+          likes: cards.likes,
+          link: cards.link,
+          name: cards.name,
+          owner: cards.owner,
+          _id: cards._id,
+        });
       } else {
         next(new NotFoundError('Передан несуществующий _id карточки'));
       }
@@ -78,7 +90,13 @@ exports.deleteCardLike = (req, res, next) => {
   )
     .then((cards) => {
       if (cards) {
-        res.send({ data: cards });
+        res.send({
+          likes: cards.likes,
+          link: cards.link,
+          name: cards.name,
+          owner: cards.owner,
+          _id: cards._id,
+        });
       } else {
         next(new NotFoundError('Передан несуществующий _id карточки'));
       }

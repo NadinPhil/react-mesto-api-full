@@ -44,9 +44,8 @@ function App() {
       .then((res) => {
         if (res) {
           setLoggedIn(true);
-          setEmail(res.data.email)
+          setEmail(res.email)
           navigate(path);
-          console.log(res)
         }
       })
       .catch((err) => {
@@ -58,12 +57,12 @@ function App() {
   // вход по логину
   const handleLogin = (data) => {
     auth
-      .authorize(data.email, data.password)
+    .authorize(data.email, data.password)
       .then((res) => {
         if (res.token) {
         localStorage.setItem('jwt', res.token);
         setLoggedIn(true);
-        setEmail(data.email)
+        setEmail(data.email);
         navigate("/");
         } else {
           setInfoTooltipOpen(true);
@@ -82,11 +81,11 @@ function App() {
     auth
       .register(data.email, data.password)
       .then((res) => {
-        if (res.data) {
+        if (res) {
           setInfoTooltipOpen(true);
           setInfoTooltip(true);
           setTimeout(() => {
-            handleLogin({ password: data.password, email: data.email });
+            handleLogin(data);
             setInfoTooltipOpen(false);
           }, 2000);
         } else {
@@ -111,7 +110,7 @@ function App() {
 
   // РАБОТА С КАРТОЧКАМИ
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(isLiked, card._id, jwt)
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
@@ -156,8 +155,8 @@ function App() {
 
   function handleUpdateAvatar(data) {
     api.editUserAvatar(data, jwt)
-      .then((dataUser) => {
-        setCurrentUser(dataUser)
+      .then((user) => {
+        setCurrentUser(user)
         closeAllPopups()
       })
       .catch((err) => console.log(`Ошибка: ${err}`))
@@ -174,12 +173,12 @@ function App() {
   
   React.useEffect(() => { 
     if (loggedIn) {
-    const jwt = localStorage.getItem('jwt');
     Promise.all([ //в Promise.all передаем массив промисов которые нужно выполнить
      api.getUserInfo(jwt),
      api.getAllCards(jwt)
  ])
     .then(([user, cards])=>{ //попадаем сюда, когда оба промиса будут выполнены
+      console.log(user)
        setCurrentUser(user)// 
        setCards(cards)        // у нас есть все нужные данные, отрисовываем страницу
      })

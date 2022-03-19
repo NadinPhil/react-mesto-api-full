@@ -17,9 +17,9 @@ function Card(props) {
         props.onCardDelete(props.card);
     }
 
-    const isOwn = props.card.owner._id === currentUser._id;
+    const isOwn = props.card.owner === currentUser._id;
     const cardDeleteButtonClassName = `elements-grid__delete${isOwn ? '_active' : ''}`;
-    const isLiked = props.card.likes.some(i => i._id === currentUser._id);
+    const isLiked = props.card.likes.some(i => i === currentUser._id);
     const cardLikeButtonClassName = `elements-grid__like${isLiked ? '_active' : ''}`
 
     return (

@@ -21,7 +21,7 @@ exports.getUserById = (req, res, next) => {
   user.findById(req.params.userId)
     .then((data) => {
       if (data) {
-        res.status(200).send(data);
+        res.status(200).send({ data });
       } next(new NotFoundError('Нет пользователя с таким id!'));
     })
     .catch((err) => {
@@ -37,7 +37,9 @@ exports.getСurrentUser = (req, res, next) => {
   user.findOne({ _id: req.user._id })
     .then((user) => {
       if (user) {
-        res.status(200).send({ data: user });
+        res.status(200).send({
+          name: user.name, about: user.about, avatar: user.avatar, email: user.email, _id: user._id,
+        });
       } next(new NotFoundError('Нет пользователя с таким id!'));
     })
     .catch((err) => {
@@ -58,7 +60,7 @@ exports.createUser = async (req, res, next) => {
     name, about, avatar, email, password: hash,
   })
     .then((user) => res.status(200).send({
-      name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+      name: user.name, about: user.about, avatar: user.avatar, email: user.email, _id: user._id,
     }))
     .catch((err) => {
       if (err.code === 11000) {
@@ -77,7 +79,9 @@ exports.updateProfile = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Нет пользователя с таким id!'));
       }
-      return res.status(200).send({ data: user });
+      return res.status(200).send({
+        name: user.name, about: user.about, avatar: user.avatar,
+      });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -94,7 +98,7 @@ exports.updateAvatar = async (req, res, next) => {
   user.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (user) {
-        return res.status(200).send({ data: user });
+        return res.status(200).send({ avatar: user.avatar, name: user.name, about: user.about });
       } next(new NotFoundError('Нет пользователя с таким id!'));
     })
     .catch((err) => {

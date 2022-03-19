@@ -39,7 +39,7 @@ getUserInfo(token){
 
 //лайк карточки
 setCardLike(cardId, token){
-    return fetch ( `${this._url}/cards/${cardId}/likes`, {
+    return fetch ( `${this._url}/cards/likes/${cardId}`, {
         method: "PUT",
         //headers:  this._headers,
         headers: {
@@ -53,7 +53,7 @@ setCardLike(cardId, token){
 
 //удаление лайка карточки 
 removeCardLike(cardId, token){
-    return fetch ( `${this._url}/cards/${cardId}/likes`, {
+    return fetch ( `${this._url}/cards/likes/${cardId}`, {
         method: "DELETE",
         //headers:  this._headers,
         headers: {
@@ -97,7 +97,7 @@ addCard(data, token){
     }
 
 //редактирования профиля
-editUserInfo(data, token){
+editUserInfo(user, token){
     return fetch( `${this._url}/users/me`, {
         method: 'PATCH',
         //headers:  this._headers,
@@ -106,8 +106,8 @@ editUserInfo(data, token){
             'Authorization': `Bearer ${token}`,
           },
         body: JSON.stringify({
-            name: data.name,
-            about: data.about
+            name: user.name,
+            about: user.about
         })
       })
       .then(this._checkResponse)
@@ -127,7 +127,7 @@ removeCard(cardId, token){
     }
 
 //изменение аватара 
-editUserAvatar(userAvatar, token){
+editUserAvatar(user, token){
     return fetch( `${this._url}/users/me/avatar`, {
         method: 'PATCH',
         //headers: this._headers,
@@ -136,7 +136,7 @@ editUserAvatar(userAvatar, token){
             'Authorization': `Bearer ${token}`,
           },
         body: JSON.stringify({
-            avatar: userAvatar.avatar
+            avatar: user.avatar
         })
       })
       .then(this._checkResponse)
@@ -145,9 +145,9 @@ editUserAvatar(userAvatar, token){
 }
 
 const api = new Api({
-    url: 'http://localhost:3001',
+    url: 'https://mestoBD.nomoredomains.work',
     headers: {
-        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        //authorization: `Bearer ${localStorage.getItem('jwt')}`,
         "content-type": "application/json"
       }
 });
